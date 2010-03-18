@@ -40,7 +40,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(BOOST_HOME)/"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -55,13 +54,6 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="libboost_thread-vc90-mt-gd-1_42.lib"
-				AdditionalLibraryDirectories="$(BOOST)/"
-				GenerateDebugInformation="true"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
