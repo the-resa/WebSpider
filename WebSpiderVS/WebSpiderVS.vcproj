@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(BOOST_HOME)/"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\boost\boost_1_42\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -59,7 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libboost_thread-vc90-mt-gd-1_42.lib"
-				AdditionalLibraryDirectories="$(BOOST)/"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_42\lib&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>

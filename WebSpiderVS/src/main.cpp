@@ -1,6 +1,7 @@
-#include <boost/thread/thread.hpp>
+#include <boost/thread.hpp>
 
 int main() {
+
 
 	return 0;
 
