@@ -2,7 +2,7 @@
 
 
 std::vector<std::string> Parsable::parse(std::string stringToParse) {
-	vector<std::string> parseResult;
-	boost::algorithm::split_regex(parseResult, stringToParse, regex( "" /* hier regex rein */ ) ) ;
+	std::vector<std::string> parseResult;
+	boost::algorithm::split_regex(parseResult, stringToParse, boost::regex(  "" /* hier regex rein */ ) ) ;
 	return parseResult;
 }
