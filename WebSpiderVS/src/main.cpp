@@ -1,12 +1,14 @@
-
-#include <boost/thread.hpp>
 #include <iostream>
+#include <istream>
+#include <ostream>
+#include <string>
+#include <boost/asio.hpp>
 
 using namespace std;
 
 
-int main() {
+int main()
+{
 
-	return 0;
-
+ system("PAUSE");
 }

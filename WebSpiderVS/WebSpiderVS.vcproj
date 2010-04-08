@@ -188,6 +188,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\WebSpider\HTTPGetter.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\WebSpider\HTTPGetter.h"
 					>
 				</File>
