@@ -17,10 +17,10 @@ class HTTPGetter {
 
 
 public:
-	//HTTPGetter();
+	HTTPGetter() {}
 	//HTTP http;
 	int get_http(string server, string path);
-	ostream HTML;
+	string HTML;
 	string server;
 	string path;
 

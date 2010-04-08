@@ -86,13 +86,18 @@ int HTTPGetter::get_http(string server, string path)
     // Write whatever content we already have to output.
     if (response.size() > 0)
       std::cout << &response;
+	
+//
+	std::ostringstream ss;
+
 
     // Read until EOF, writing data to output as we go.
     while (boost::asio::read(socket, response,
 		boost::asio::transfer_at_least(1), error)) {
       std::cout << &response;
-	  HTML << &response;
+	  ss << &response;
 	}
+	HTML = ss.str();
     if (error != boost::asio::error::eof)
       throw boost::system::system_error(error);
   }

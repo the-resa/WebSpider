@@ -41,6 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;C:\Program Files\boost\boost_1_42\&quot;"
+				PreprocessorDefinitions="_WIN32_WINNT=0x0501"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -185,6 +186,10 @@
 				</File>
 				<File
 					RelativePath=".\src\WebSpider\HTTP.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\WebSpider\HTTPGetter.cpp"
 					>
 				</File>
 				<File
