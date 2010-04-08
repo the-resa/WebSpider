@@ -8,20 +8,14 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <iostream>
-#include <istream>
-#include <ostream>
-#include <string>
-#include <boost/asio.hpp>
 
-using namespace std;
-using boost::asio::ip::tcp;
+#include "HTTPGetter.h"
+
+//ostream HTML = "";
 
 
-int main(int argc, char* argv[])
+int HTTPGetter::get_http(string server, string path)
 {
-string server = "www.wrel.de";
-string path = "/";
   try
   {
 
@@ -95,8 +89,10 @@ string path = "/";
 
     // Read until EOF, writing data to output as we go.
     while (boost::asio::read(socket, response,
-          boost::asio::transfer_at_least(1), error))
+		boost::asio::transfer_at_least(1), error)) {
       std::cout << &response;
+	  HTML << &response;
+	}
     if (error != boost::asio::error::eof)
       throw boost::system::system_error(error);
   }
@@ -107,4 +103,6 @@ string path = "/";
   string d;
   cin >> d;
  system("PAUSE");
+ return 0;
 }
+//HTTPGetter::HTTPGetter() {}
