@@ -1,9 +1,10 @@
 #ifndef HTML_H
 #define HTML_H
 
+#include "Parsable.h"
 #include "URL.h"
 
-class HTML {
+class HTML: public Parsable {
 
 public:
 	std::vector<URL> urls;
