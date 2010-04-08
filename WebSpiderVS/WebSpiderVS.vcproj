@@ -160,7 +160,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Quelldateien"
+			Name="src"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
@@ -168,9 +168,37 @@
 				RelativePath=".\src\main.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\src\WebSpider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WebSpider.h"
+				>
+			</File>
+			<Filter
+				Name="WebSpider"
+				>
+				<File
+					RelativePath=".\src\WebSpider\HTML.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\WebSpider\HTTP.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\WebSpider\HTTPGetter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\WebSpider\URL.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
-			Name="Headerdateien"
+			Name="include"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
