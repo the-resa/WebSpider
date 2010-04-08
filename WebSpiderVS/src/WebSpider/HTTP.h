@@ -6,8 +6,8 @@
 class HTTP {
 	
 public:
+	std::string method;
 	HTML html;
-
 };
 
 #endif
