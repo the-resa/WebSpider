@@ -6,7 +6,7 @@
 class Parsable {
 
 public:
-	
+	std::string stringToParse;
 
 };
 
