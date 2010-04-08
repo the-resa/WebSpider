@@ -3,15 +3,17 @@
 #include <ostream>
 #include <string>
 #include <boost/asio.hpp>
-#include "WebSpider/HTTPGetter.h"
-
-using namespace std;
-
+#include "WebSpider.h"
+#include "WebSpider/HTTP.h"
 
 int main()
 {
-	HTTPGetter http;
-	http.get_http("www.wrel.de","/");
+	WebSpider spider;
+	HTTP http(spider.getHTTP("www.wrel.de","/"));
 
- system("PAUSE");
+	std::cout << http.getData();
+
+	system("PAUSE");
+
+	return 0;
 }

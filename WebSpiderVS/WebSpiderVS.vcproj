@@ -170,10 +170,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\WebSpider.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\WebSpider.h"
 				>
 			</File>
@@ -185,15 +181,11 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\WebSpider\HTTP.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\WebSpider\HTTP.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\HTTPGetter.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\HTTPGetter.h"
 					>
 				</File>
 				<File
@@ -205,7 +197,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\WebSpider\URL.h"
+					RelativePath=".\src\WebSpider.cpp"
 					>
 				</File>
 			</Filter>

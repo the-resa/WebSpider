@@ -9,10 +9,12 @@
 class Parsable {
 
 public:
-	std::vector<std::string> parse(std::string);
-	
+	Parsable(std::string data);
+	std::string getData() const;
+
 protected:
-	std::string stringToParse;
+	virtual std::vector<std::string> parse(std::string stringToParse) = 0;
+	std::string data;
 
 private:
 	

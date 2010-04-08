@@ -2,12 +2,15 @@
 #define HTML_H
 
 #include "Parsable.h"
-#include "URL.h"
 
 class HTML: public Parsable {
 
 public:
-	std::vector<URL> urls;
+	HTML(std::string data): 
+	  Parsable(data) {
+	  }
+
+	std::vector<std::string> urls;
 
 };
 

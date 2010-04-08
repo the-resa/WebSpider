@@ -1,9 +1,10 @@
 # include "Parsable.h"
 
+Parsable::Parsable(std::string data) {
+	this->data = data;
+}
 
-std::vector<std::string> Parsable::parse(std::string stringToParse) {
-	std::vector<std::string> parseResult;
-	boost::algorithm::split_regex(parseResult, stringToParse, boost::regex("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",  boost::regex::normal | boost::regbase::icase));
-	return parseResult;
+std::string Parsable::getData() const {
+	return data;
 }
               
