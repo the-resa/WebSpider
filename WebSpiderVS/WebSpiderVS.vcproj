@@ -188,11 +188,15 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\WebSpider\HTTPGetter.cpp"
+					RelativePath=".\src\WebSpider\HTTPGetter.h"
 					>
 				</File>
 				<File
-					RelativePath=".\src\WebSpider\HTTPGetter.h"
+					RelativePath=".\src\WebSpider\Parsable.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\WebSpider\Parsable.h"
 					>
 				</File>
 				<File
