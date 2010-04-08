@@ -3,8 +3,7 @@
 #include <ostream>
 #include <string>
 #include <boost/asio.hpp>
-#include "WebSpider.h"
-#include "WebSpider/HTTP.h"
+#include "WebSpider/WebSpider.h"
 
 int main()
 {

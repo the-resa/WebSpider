@@ -5,6 +5,7 @@
 #include <vector>
 #include <boost/regex.hpp>
 #include <boost/algorithm/string/regex.hpp>
+#include <iostream>
 
 using namespace std;
 
