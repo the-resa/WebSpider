@@ -10,6 +10,8 @@ class Parsable {
 
 public:
 	std::vector<std::string> parse(std::string);
+	
+protected:
 	std::string stringToParse;
 
 private:
