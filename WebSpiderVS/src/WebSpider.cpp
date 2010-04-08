@@ -77,9 +77,7 @@ void WebSpider::crawlURL(string server) {
 	if (response.size() > 0)
 		std::cout << &response;
 
-	//
 	std::ostringstream ss;
-
 
 	// Read until EOF, writing data to output as we go.
 	while (boost::asio::read(socket, response,

@@ -3,6 +3,7 @@
 
 #include "HTML.h"
 #include "Parsable.h"
+#include <iostream>
 
 class HTTP: public Parsable {
 
@@ -11,8 +12,9 @@ public:
 	  Parsable(data){
 		  this->data = data;
 	  }
+	  std::vector<std::string> parse(std::string stringToParse);
 private:
-	std::vector<std::string> parse(std::string stringToParse);
+	
 	HTML* html;
 	std::string method;
 };
