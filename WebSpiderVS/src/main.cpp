@@ -9,9 +9,7 @@
 int main()
 {
 	WebSpider spider;
-	HTTP http(spider.getHTTP("www.wrel.de","/"));
-
-	std::cout << http.getData();
+	spider.crawlURL("www.vollbeat.de");
 
 	system("PAUSE");
 
