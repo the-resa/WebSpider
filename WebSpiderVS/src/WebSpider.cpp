@@ -63,13 +63,13 @@ string WebSpider::getHTTP(string server, string path) {
 
 		// Process the response headers.
 		std::string header;
-		while (std::getline(response_stream, header) && header != "\r")
-			std::cout << header << "\n";
-		std::cout << "\n";
+		//while (std::getline(response_stream, header) && header != "\r")
+			//std::cout << header << "\n";
+		//std::cout << "\n";
 
 		// Write whatever content we already have to output.
-		if (response.size() > 0)
-			std::cout << &response;
+		//if (response.size() > 0)
+		//	std::cout << &response;
 
 		//
 		std::ostringstream ss;

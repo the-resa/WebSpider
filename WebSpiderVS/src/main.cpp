@@ -9,9 +9,9 @@
 int main()
 {
 	WebSpider spider;
-	HTTP http(spider.getHTTP("www.wrel.de","/"));
-
-	std::cout << http.getData();
+	HTTP http(spider.getHTTP("www.fh-salzburg.ac.at","/"));
+	http.parse(http.getData());
+	
 
 	system("PAUSE");
 
