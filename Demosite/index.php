@@ -21,6 +21,15 @@
 ?>
 </ul>
 
+<h2> Links mit redirects </h2>
+
+<p><a href="redirects/redirect1.php">Redirect-Seite1: redirect zum Index</a></p>
+<p><a href="redirects/redirect2.php">Redirect-Seite2: redirect zu google.at</a></p>
+<p><a href="redirects/redirect3.php">Redirect-Seite3: redirect zu Redirect-Seite3</a></p>
+<p><a href="redirects/redirect4.php">Redirect-Seite4: redirect zu Redirect-Seite3</a></p>
+
+<h2> Diverse Links </h2>
+
 <p><a href="sites/gibts_nicht.php">Diese interne Seite gibts nicht</a></p>
 <p><a href="sites/gibts_auch_nicht.php">Diese interne Seite gibts auch nicht</a></p>
 <p><a href="www.google.at">Google ohne http</a></p>
