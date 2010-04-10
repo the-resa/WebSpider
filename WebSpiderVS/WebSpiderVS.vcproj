@@ -166,34 +166,34 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\DataManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\DataManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WebSpider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WebSpider.h"
 				>
 			</File>
 			<Filter
 				Name="WebSpider"
 				>
 				<File
-					RelativePath=".\src\WebSpider\HTML.cpp"
+					RelativePath=".\src\WebSpider\URL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\src\WebSpider\HTML.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\Link.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\Link.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\WebSpider.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\WebSpider.h"
+					RelativePath=".\src\WebSpider\URL.h"
 					>
 				</File>
 			</Filter>
