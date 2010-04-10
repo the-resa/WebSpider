@@ -1,17 +1,19 @@
-#ifndef HTML_PARSER_H
-#define HTML_PARSER_H
+#ifndef HTML_H
+#define HTML_H
 
-#include <string>
 #include <vector>
 #include <boost/regex.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <iostream>
 
+#include "Link.h"
+
 using namespace std;
 
-class HTMLParser {
+class HTML {
 public:
-	vector<string> getURLs(string htmlToParse);
+	HTML(string data);
+	vector<Link> links;
 };
 
 #endif

@@ -7,8 +7,10 @@
 
 int main()
 {
+
+	Link startLink("http://www.fh-salzburg.ac.at");
 	WebSpider spider;
-	spider.crawlURL("www.vollbeat.de");
+	spider.crawl(startLink);
 
 	system("PAUSE");
 

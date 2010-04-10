@@ -173,11 +173,19 @@
 				Name="WebSpider"
 				>
 				<File
-					RelativePath=".\src\WebSpider\HTMLParser.cpp"
+					RelativePath=".\src\WebSpider\HTML.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\src\WebSpider\HTMLParser.h"
+					RelativePath=".\src\WebSpider\HTML.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\WebSpider\Link.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\WebSpider\Link.h"
 					>
 				</File>
 				<File

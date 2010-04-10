@@ -8,7 +8,10 @@
 #include <boost/asio.hpp>
 #include <vector>
 
-#include "HTMLParser.h"
+#include "HTML.h"
+#include "Link.h"
+
+#define CRAWL_DOMAIN_ONLY
 
 using boost::asio::ip::tcp;
 using namespace std;
@@ -16,10 +19,10 @@ using namespace std;
 class WebSpider {
 
 public:
-	void crawlURL(string server);
-	vector<string> brokenURLs;
-	vector<string> crawledURLs;
-	HTMLParser htmlParser;
+	void crawl(Link link);
+
+	vector<Link> brokenLinks;
+	vector<Link> crawledLinks;
 };
 
 #endif
