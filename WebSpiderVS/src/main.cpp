@@ -3,8 +3,8 @@
 int main()
 {
 
-	WebSpider spider("http", "tv.vienna.at");
-	spider.crawl("/");
+	WebSpider spider("http", "www.frick-web.at");
+	spider.crawl("/Demosite/");
 
 	system("PAUSE");
 
