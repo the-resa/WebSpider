@@ -3,12 +3,19 @@
 
 #include "WebSpider/URL.h"
 
-#define CRAWL_DOMAIN_ONLY
+using namespace std;
 
 class WebSpider {
 
 public:
-	WebSpider();
+	WebSpider(string protocol, string host);
+	void crawl(string link);
+	vector<std::string> crawledLinks;
+	vector<std::string> brokenLinks;
+
+private:
+	string protocol;
+	string host;
 };
 
 #endif

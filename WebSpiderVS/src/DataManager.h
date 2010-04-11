@@ -11,8 +11,10 @@ public:
 	~DataManager();
 	static DataManager& getInstance();
 
-	std::vector<URL> crawledURLs;
-	std::vector<URL> brokenURLs;
+	std::vector<string>	crawledURLs;
+	std::vector<string>	brokenURLs;
+	std::string			protocol;
+	std::string			server;
 };
 
 #endif

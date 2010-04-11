@@ -3,7 +3,8 @@
 int main()
 {
 
-	WebSpider spider;
+	WebSpider spider("http", "tv.vienna.at");
+	spider.crawl("/");
 
 	system("PAUSE");
 
