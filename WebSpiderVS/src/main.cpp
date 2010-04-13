@@ -8,7 +8,7 @@
 int main()
 {
 	WebSpider spider;
-	spider.crawlURL("www.vollbeat.de");
+	spider.crawlURL("www.fh-salzburg.ac.at");
 
 	system("PAUSE");
 

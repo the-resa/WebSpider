@@ -109,6 +109,7 @@ void WebSpider::crawlURL(string server) {
 	}
 	catch (std::exception& e)
 	{
+		server;
 		std::cout << "Exception: " << e.what() << "\n";
 	}
 }
