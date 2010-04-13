@@ -1,1 +1,26 @@
-WebSpider
+*****************************************************************
+********************** WEB SPIDER - README **********************
+*****************************************************************
+
+
+Authors
+*****************************************************************
+Angerer Theresa
+Czernik Thomas
+Frick Matthias
+Havranek Ivo
+
+
+Date
+*****************************************************************
+Finished on the 18th of April, 2010.
+
+
+Before compiling project
+*****************************************************************
+Use the boost_1_42 library by Beman Dawes (2008).
+Go to "C:\Program Files\" and create a new directory called 
+"boost". Copy and paste boost into that directory. Afterwards you 
+should have the following directory structure:
+"C:\Program Files\boost\boost_1_42".
+
