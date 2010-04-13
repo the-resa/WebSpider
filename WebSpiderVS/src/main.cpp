@@ -2,8 +2,8 @@
 
 int main()
 {
-	WebSpider spider("http", "www.frick-web.at");
-	spider.crawl("/Demosite/");
+	WebSpider spider("http", "www.wrel.de");
+	spider.crawl("/frick/Demosite/");
 
 	system("PAUSE");
 

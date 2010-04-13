@@ -100,12 +100,14 @@ void WebSpider::crawl(string path) {
 					boost::regbase::normal | boost::regbase::icase);
 				boost::regex_split(std::back_inserter(parseResult), ss.str(), e);
 
-				//boost::algorithm::split_regex(parseResult, stringToParse, boost::regex("(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?",  boost::regex::normal | boost::regbase::icase));
-				//boost::algorithm::split_regex(parseResult, stringToParse, boost::regex("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",  boost::regex::normal | boost::regbase::icase));
+				boost::regex n("<\\s*A\\s+[^>]*href\\s*=\\s*\'([^\']*)\'",		// TODO: href= can also start with ' instead of " ; nice-to-have: regex filter last path
+					boost::regbase::normal | boost::regbase::icase);
+				boost::regex_split(std::back_inserter(parseResult), ss.str(), n);
 
 
 				for (unsigned int i = 0; i < parseResult.size(); i++) {
 					// ignore new absolute links and links with "#" and "javascript:"
+					//cout << parseResult[i] << "\n";
 					if (parseResult.at(i).find("://") == string::npos && parseResult.at(i).find("#") == string::npos && parseResult.at(i).find("javascript:") == string::npos) {
 #ifdef THREADING
 						crawlThread.join();
