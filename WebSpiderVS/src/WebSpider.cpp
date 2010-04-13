@@ -9,26 +9,31 @@ WebSpider::WebSpider(string protocol, string host) {
 void WebSpider::crawl(string path) {
 
 	// start new thread for crawling
-	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path));
-	boost::mutex mutex;
+//	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path));
+//	boost::mutex mutex;
+//	mutex.initialize();
 
 	try {
 
 		bool hasBeenCrawledYet = false;
 		// binary search would be better !!! // TODO: check if this loop is necessary
-		mutex.lock();
+//		mutex.lock();
 		for (int i = 0; i < crawledLinks.size(); i++) {
 			if (path == crawledLinks.at(i))
 				hasBeenCrawledYet = true;
 		}
-		mutex.unlock();
+//		mutex.unlock();
 
 		if (false == hasBeenCrawledYet) {
-			mutex.lock();
+//			mutex.lock();
 			crawledLinks.push_back(path);
-			mutex.unlock();
+//			mutex.unlock();
 
-			cout << "crawling link: " << path << endl;
+			cout << "crawling link: ";
+#ifdef DEBUG 
+			cout << protocol + "://" + host;
+#endif
+			cout << path << endl;
 
 			boost::asio::io_service io_service;
 
@@ -107,22 +112,27 @@ void WebSpider::crawl(string path) {
 				boost::regex_split(std::back_inserter(parseResult), ss.str(), n);
 
 
-				mutex.lock();
+//				mutex.lock();
 				for (unsigned int i = 0; i < parseResult.size(); i++) {
 					// ignore new absolute links and links with "#" and "javascript:"
-					//cout << parseResult[i] << "\n";
-					if (parseResult.at(i).find("://") == string::npos && parseResult.at(i).find("#") == string::npos && parseResult.at(i).find("javascript:") == string::npos) {
-						crawlThread.join();
+					if (parseResult.at(i).find("://") == string::npos && parseResult.at(i).find("#") == string::npos && parseResult.at(i).find("javascript:") == string::npos && parseResult.at(i).find("..") == string::npos) {
+
+						// check if the current path is a file
+						if (path.at(path.size() - 1) != '/') {
+							//if so, reset path to one dir higher
+							path = path.substr(0, path.find_last_of("/"));
+						}
+//						crawlThread.join();
 						// crawl new link
-						crawl(parseResult.at(i));
+						crawl(path + parseResult.at(i));
 					}
 				}
-				mutex.unlock();
+//				mutex.unlock();
 			}
 			else {
-				mutex.lock();
+//				mutex.lock();
 				brokenLinks.push_back(path);
-				mutex.unlock();
+//				mutex.unlock();
 				cout << "Added broken link: " << path << endl;
 			}
 		}
