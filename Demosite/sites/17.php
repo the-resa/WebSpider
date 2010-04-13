@@ -13,7 +13,7 @@ Site17
 
   for($count = 1; $count < 21; $count++)
   {
-    echo "<li><a href='" . $count . ".php'>site" . $count . "</a></li>";
+    echo '<li><a href="' . $count . '.php">site' . $count . '</a></li>';
   }
   
 ?>

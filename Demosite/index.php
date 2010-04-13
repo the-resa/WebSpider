@@ -9,12 +9,14 @@
 
 <h1>Willkommen auf der Webcrawler Demosite!</h1>
 
-<p>Diese Seite beinhaltet:<br/>
-<li>445 relative links</li>
-<li>4 absolute links (seiten)</li>
-<li>21 absolute link (bilder)</li>
-<li>445 broken links (seiten)</li>
-<li>21 broken link (bilder)</li>
+<p>Diese Seite beinhaltet:</p>
+<ul>
+    <li>445 relative links</li>
+    <li>4 absolute links (seiten)</li>
+    <li>21 absolute link (bilder)</li>
+    <li>445 broken links (seiten)</li>
+    <li>21 broken link (bilder)</li>
+</ul>
 
 <h2>Unterseiten</h2>
 <ul>
@@ -22,7 +24,7 @@
 
   for($count = 1; $count < 21; $count++)
   {
-    echo "<li><a href='sites/" . $count . ".php'>site" . $count . "</a></li>";
+    echo '<li><a href="sites/' . $count . '.php">site' . $count . '</a></li>';
   }
   
 ?>
@@ -55,11 +57,12 @@
 
   for($count_broken = 1; $count_broken < 201; $count_broken++)
   {
-    echo "<li><a href='sites/broken/" . $count_broken . ".php'>broken_intern" . $count_broken . "</a></li>";
+    echo '<li><a href="sites/broken/' . $count_broken . '.php">broken_intern' . $count_broken . '</a></li>';
   }
   
+  
 ?>
-</ul>
+
 
 <h2>Broken Links anderer Websites (externe broken links)</h2>
 <ul>
@@ -67,7 +70,7 @@
 
   for($count_broken = 1; $count_broken < 201; $count_broken++)
   {
-    echo "<li><a href='http://www.frick-web.at/sites/broken/" . $count_broken . ".php'>broken_extern" . $count_broken . "</a></li>";
+    echo '<li><a href="http://www.frick-web.at/sites/broken/' . $count_broken . '.php">broken_extern' . $count_broken . '</a></li>';
   }
   
 ?>
