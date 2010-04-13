@@ -169,34 +169,14 @@
 				RelativePath=".\src\main.cpp"
 				>
 			</File>
-			<Filter
-				Name="WebSpider"
+			<File
+				RelativePath=".\src\WebSpider.cpp"
 				>
-				<File
-					RelativePath=".\src\WebSpider\HTML.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\HTML.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\Link.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\Link.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\WebSpider.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\WebSpider\WebSpider.h"
-					>
-				</File>
-			</Filter>
+			</File>
+			<File
+				RelativePath=".\src\WebSpider.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="include"
