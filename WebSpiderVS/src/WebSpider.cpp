@@ -11,6 +11,7 @@ void WebSpider::crawl(string path) {
 #ifdef THREADING
 	// start new thread for crawling
 	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path));
+	boost::mutex mutex;
 #endif
 
 	try {
@@ -22,7 +23,9 @@ void WebSpider::crawl(string path) {
 				hasBeenCrawledYet = true;
 		}
 		if (false == hasBeenCrawledYet) {
+			mutex.lock();
 			crawledLinks.push_back(path);
+			mutex.unlock();
 
 			cout << "crawling link: " << path << endl;
 
@@ -113,7 +116,9 @@ void WebSpider::crawl(string path) {
 				}
 			}
 			else {
+				mutex.lock();
 				brokenLinks.push_back(path);
+				mutex.unlock();
 				cout << "Added broken link: " << path << endl;
 			}
 		}
