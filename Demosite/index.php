@@ -9,6 +9,13 @@
 
 <h1>Willkommen auf der Webcrawler Demosite!</h1>
 
+<p>Diese Seite beinhaltet:<br/>
+<li>445 relative links</li>
+<li>4 absolute links (seiten)</li>
+<li>21 absolute link (bilder)</li>
+<li>445 broken links (seiten)</li>
+<li>21 broken link (bilder)</li>
+
 <h2>Unterseiten</h2>
 <ul>
 <?php
