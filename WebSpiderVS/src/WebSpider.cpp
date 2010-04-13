@@ -8,20 +8,21 @@ WebSpider::WebSpider(string protocol, string host) {
 
 void WebSpider::crawl(string path) {
 
-#ifdef THREADING
 	// start new thread for crawling
 	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path));
 	boost::mutex mutex;
-#endif
 
 	try {
 
 		bool hasBeenCrawledYet = false;
 		// binary search would be better !!! // TODO: check if this loop is necessary
+		mutex.lock();
 		for (int i = 0; i < crawledLinks.size(); i++) {
 			if (path == crawledLinks.at(i))
 				hasBeenCrawledYet = true;
 		}
+		mutex.unlock();
+
 		if (false == hasBeenCrawledYet) {
 			mutex.lock();
 			crawledLinks.push_back(path);
@@ -104,16 +105,16 @@ void WebSpider::crawl(string path) {
 				//boost::algorithm::split_regex(parseResult, stringToParse, boost::regex("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",  boost::regex::normal | boost::regbase::icase));
 
 
+				mutex.lock();
 				for (unsigned int i = 0; i < parseResult.size(); i++) {
 					// ignore new absolute links and links with "#" and "javascript:"
 					if (parseResult.at(i).find("://") == string::npos && parseResult.at(i).find("#") == string::npos && parseResult.at(i).find("javascript:") == string::npos) {
-#ifdef THREADING
 						crawlThread.join();
-#endif
 						// crawl new link
 						crawl(parseResult.at(i));
 					}
 				}
+				mutex.unlock();
 			}
 			else {
 				mutex.lock();
