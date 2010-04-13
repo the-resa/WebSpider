@@ -1,17 +1,24 @@
 #ifndef WEB_SPIDER_H
 #define WEB_SPIDER_H
 
-#include "WebSpider/URL.h"
+#include <string>
+#include <vector>
+#include <iostream>
+#include <boost/asio.hpp>
+#include <boost/thread.hpp>
 
 using namespace std;
+using namespace boost::asio::ip;
+
+#define THREADING
 
 class WebSpider {
 
 public:
 	WebSpider(string protocol, string host);
 	void crawl(string link);
-	vector<std::string> crawledLinks;
-	vector<std::string> brokenLinks;
+	vector<string> crawledLinks;
+	vector<string> brokenLinks;
 
 private:
 	string protocol;

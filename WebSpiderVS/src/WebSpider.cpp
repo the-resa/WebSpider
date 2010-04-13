@@ -7,6 +7,12 @@ WebSpider::WebSpider(string protocol, string host) {
 }
 
 void WebSpider::crawl(string path) {
+
+#ifdef THREADING
+	// start new thread for crawling
+	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path));
+#endif
+
 	try {
 
 		bool hasBeenCrawledYet = false;
@@ -98,7 +104,9 @@ void WebSpider::crawl(string path) {
 				for (unsigned int i = 0; i < parseResult.size(); i++) {
 					// ignore new absolute links and links with "#" and "javascript:"
 					if (parseResult.at(i).find("://") == string::npos && parseResult.at(i).find("#") == string::npos && parseResult.at(i).find("javascript:") == string::npos) {
-
+#ifdef THREADING
+						crawlThread.join();
+#endif
 						// crawl new link
 						crawl(parseResult.at(i));
 					}
