@@ -96,7 +96,8 @@ void WebSpider::crawl(string path) {
 
 				vector<string> parseResult;
 
-				boost::regex e("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",		// TODO: href= can also start with ' instead of " ; nice-to-have: regex filter last path
+				// TODO: href= can also start with ' instead of " ; nice-to-have: regex filter last path
+				boost::regex e("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",
 					boost::regbase::normal | boost::regbase::icase);
 				boost::regex_split(std::back_inserter(parseResult), ss.str(), e);
 
