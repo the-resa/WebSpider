@@ -10,7 +10,6 @@
 using namespace std;
 using namespace boost::asio::ip;
 
-#define THREADING
 
 class WebSpider {
 
