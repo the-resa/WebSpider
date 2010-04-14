@@ -4,37 +4,36 @@ WebSpider::WebSpider(string protocol, string host) {
 
 	this->protocol = protocol;
 	this->host = host;
+	domain = host.substr(host.find_first_not_of("www."));
 }
 
-void WebSpider::crawl(string path) {
-
+void WebSpider::crawl(string path, string link) {
 	// start new thread for crawling
 //	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path));
 //	boost::mutex mutex;
 //	mutex.initialize();
 
-	try {
+	try {		
 
 		bool hasBeenCrawledYet = false;
-		// binary search would be better !!! // TODO: check if this loop is necessary
 //		mutex.lock();
+		// TODO: check if this loop is necessary
 		for (int i = 0; i < crawledLinks.size(); i++) {
-			if (path == crawledLinks.at(i))
+			if (path + link == crawledLinks.at(i))
 				hasBeenCrawledYet = true;
 		}
 //		mutex.unlock();
 
 		if (false == hasBeenCrawledYet) {
 //			mutex.lock();
-			crawledLinks.push_back(path);
+			crawledLinks.push_back(path + link);
 //			mutex.unlock();
 
-			cout << "crawling link: ";
-#ifdef DEBUG 
-			cout << protocol + "://" + host;
-#endif
-			cout << path << endl;
 
+			cout << "crawling link: " << path << link << endl;
+#ifdef DEBUG
+			cout << "\tdomain: " << domain << endl;
+#endif
 			boost::asio::io_service io_service;
 
 			// Get a list of endpoints corresponding to the host name.
@@ -60,7 +59,7 @@ void WebSpider::crawl(string path) {
 			boost::asio::streambuf request;
 			ostream request_stream(&request);
 
-			request_stream << "GET " << path << " HTTP/1.0\r\n";
+			request_stream << "GET " << path << link << " HTTP/1.0\r\n";
 			request_stream << "Host: " << host << "\r\n";
 			request_stream << "Accept: */*\r\n";
 			request_stream << "Connection: close\r\n\r\n";
@@ -100,40 +99,48 @@ void WebSpider::crawl(string path) {
 				if (error != boost::asio::error::eof)
 					throw boost::system::system_error(error);		
 
-				vector<string> parseResult;
+				vector<string> links;
 
 				// TODO: href= can also start with ' instead of " ; nice-to-have: regex filter last path
 				boost::regex e("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",
 					boost::regbase::normal | boost::regbase::icase);
-				boost::regex_split(std::back_inserter(parseResult), ss.str(), e);
+				boost::regex_split(std::back_inserter(links), ss.str(), e);
 
 				boost::regex n("<\\s*A\\s+[^>]*href\\s*=\\s*\'([^\']*)\'",		// TODO: href= can also start with ' instead of " ; nice-to-have: regex filter last path
 					boost::regbase::normal | boost::regbase::icase);
-				boost::regex_split(std::back_inserter(parseResult), ss.str(), n);
+				boost::regex_split(std::back_inserter(links), ss.str(), n);
 
 
 //				mutex.lock();
-				for (unsigned int i = 0; i < parseResult.size(); i++) {
-					// ignore new absolute links and links with "#" and "javascript:"
-					if (parseResult.at(i).find("://") == string::npos && parseResult.at(i).find("#") == string::npos && parseResult.at(i).find("javascript:") == string::npos && parseResult.at(i).find("..") == string::npos) {
-
-						// check if the current path is a file
-						if (path.at(path.size() - 1) != '/') {
-							//if so, reset path to one dir higher
-							path = path.substr(0, path.find_last_of("/"));
+				for (unsigned int i = 0; i < links.size(); i++) {
+					string newPath, newLink;
+					// check relative link
+					if (links.at(i).find(protocol) == string::npos) {
+						// ignore links with "..", "#" or "javascript:"
+						if (links.at(i).find("..") == string::npos && links.at(i).find("#") == string::npos && links.at(i).find("javascript:") == string::npos) {
+							// check new dirs
+							if (links.at(i).find("/") != string::npos) {
+								newPath = path + links.at(i).substr(0, links.at(i).find_last_of("/") + 1);
+								newLink = links.at(i).substr(links.at(i).find_last_of("/") + 1);
+							}
+							// relative link in same dir
+							else {
+								newPath = path;
+								newLink = links.at(i);
+							}
+//							crawlThread.join();
+							// crawl new link
+							crawl(newPath, newLink);
 						}
-//						crawlThread.join();
-						// crawl new link
-						crawl(path + parseResult.at(i));
 					}
 				}
 //				mutex.unlock();
 			}
 			else {
 //				mutex.lock();
-				brokenLinks.push_back(path);
+				brokenLinks.push_back(path + link);
 //				mutex.unlock();
-				cout << "Added broken link: " << path << endl;
+				cout << "Added broken link: " << path << link << endl;
 			}
 		}
 	}

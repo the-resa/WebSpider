@@ -16,13 +16,14 @@ class WebSpider {
 
 public:
 	WebSpider(string protocol, string host);
-	void crawl(string link);
+	void crawl(string path, string link="");
 	vector<string> crawledLinks;
 	vector<string> brokenLinks;
 
 private:
 	string protocol;
 	string host;
+	string domain;
 };
 
 #endif
