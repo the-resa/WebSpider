@@ -1,34 +1,33 @@
 #include "WebSpider.h"
 
-WebSpider::WebSpider(string protocol, string host) {
-
+WebSpider::WebSpider(string protocol, string host)
+{
 	this->protocol = protocol;
 	this->host = host;
-	domain = host.substr(host.find_first_not_of("www."));
+	domain = host.substr(host.find_first_not_of("www.")); // not correct yet !!!
+	mutex.initialize();
+	crawledLinks.mutex = &mutex;
+	brokenLinks.mutex = &mutex;
 }
 
 void WebSpider::crawl(string path, string link) {
+
 	// start new thread for crawling
-//	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path));
-//	boost::mutex mutex;
-//	mutex.initialize();
+	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path, link));
 
 	try {		
 
 		bool hasBeenCrawledYet = false;
-//		mutex.lock();
-		// TODO: check if this loop is necessary
+		//mutex.lock();
 		for (unsigned int i = 0; i < crawledLinks.size(); i++) {
 			if (path + link == crawledLinks.at(i))
 				hasBeenCrawledYet = true;
 		}
-//		mutex.unlock();
+		//mutex.unlock();
 
 		if (false == hasBeenCrawledYet) {
-//			mutex.lock();
-			crawledLinks.push_back(path + link);
-//			mutex.unlock();
 
+			crawledLinks.push_back(path + link);
 
 			cout << "crawling link: " << path << link << endl;
 #ifdef DEBUG
@@ -111,13 +110,13 @@ void WebSpider::crawl(string path, string link) {
 				boost::regex_split(std::back_inserter(links), ss.str(), n);
 
 
-//				mutex.lock();
+				//mutex.lock();
 				for (unsigned int i = 0; i < links.size(); i++) {
 					string newPath, newLink;
 					// check relative link
 					if (links.at(i).find(protocol) == string::npos) {
-						// ignore links with "..", "#" or "javascript:"
-						if (links.at(i).find("..") == string::npos && links.at(i).find("#") == string::npos && links.at(i).find("javascript:") == string::npos) {
+						// ignore links with "#" or "javascript:"
+						if (links.at(i).find("#") == string::npos && links.at(i).find("javascript:") == string::npos) {
 							// check new dirs
 							if (links.at(i).find("/") != string::npos) {
 								newPath = path + links.at(i).substr(0, links.at(i).find_last_of("/") + 1);
@@ -128,20 +127,18 @@ void WebSpider::crawl(string path, string link) {
 								newPath = path;
 								newLink = links.at(i);
 							}
-//							crawlThread.join();
-							// crawl new link
+							// crawl new link recursive
 							crawl(newPath, newLink);
 						}
 					}
 				}
-//				mutex.unlock();
+				//mutex.unlock();
 			}
 			else {
-//				mutex.lock();
 				brokenLinks.push_back(path + link);
-//				mutex.unlock();
 				cout << "Added broken link: " << path << link << endl;
 			}
+			crawlThread.join();
 		}
 	}
 	catch (exception& e)
