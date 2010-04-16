@@ -18,7 +18,7 @@ void WebSpider::crawl(string path, string link) {
 		bool hasBeenCrawledYet = false;
 //		mutex.lock();
 		// TODO: check if this loop is necessary
-		for (int i = 0; i < crawledLinks.size(); i++) {
+		for (unsigned int i = 0; i < crawledLinks.size(); i++) {
 			if (path + link == crawledLinks.at(i))
 				hasBeenCrawledYet = true;
 		}
