@@ -12,8 +12,10 @@ WebSpider::WebSpider(string protocol, string host)
 
 void WebSpider::crawl(string path, string link) {
 
+#ifdef THREADING
 	// start new thread for crawling
 	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path, link));
+#endif
 
 	try {		
 
@@ -114,7 +116,7 @@ void WebSpider::crawl(string path, string link) {
 				for (unsigned int i = 0; i < links.size(); i++) {
 					string newPath, newLink;
 					// check relative link
-					if (links.at(i).find(protocol) == string::npos) {
+					if (links.at(i).find("://") == string::npos) {
 						// ignore links with "#" or "javascript:"
 						if (links.at(i).find("#") == string::npos && links.at(i).find("javascript:") == string::npos) {
 							// check new dirs
@@ -131,6 +133,16 @@ void WebSpider::crawl(string path, string link) {
 							crawl(newPath, newLink);
 						}
 					}
+					// absolute link
+					else {
+						if (links.at(i).find(domain)) {
+							newPath = links.at(i).substr(links.at(i).find_first_of("/") + 1, links.at(i).find_last_of("/") + 1);
+							newLink = links.at(i).substr(links.at(i).find(newPath), newPath.size() + 1);
+						}
+						// crawl link recursive
+						crawl(newPath, newLink);
+					}
+
 				}
 				//mutex.unlock();
 			}
@@ -138,7 +150,9 @@ void WebSpider::crawl(string path, string link) {
 				brokenLinks.push_back(path + link);
 				cout << "Added broken link: " << path << link << endl;
 			}
+#ifdef THREADING
 			crawlThread.join();
+#endif
 		}
 	}
 	catch (exception& e)
