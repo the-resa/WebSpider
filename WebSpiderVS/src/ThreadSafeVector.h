@@ -30,7 +30,7 @@ public:
 		return n;
 	}
 
-	boost::mutex* mutex;
+	boost::recursive_mutex* mutex;
 
 private:
 	std::vector<T> vector;

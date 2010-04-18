@@ -15,37 +15,26 @@ WebSpider::WebSpider(string protocol, string host)
 	crawledLinks.mutex = &mutex;
 	brokenLinks.mutex = &mutex;
 
-#ifdef THREADING
-	threadNum = 0;
-#endif
+	elapsedTime = 0.0;
 }
 
 void WebSpider::crawl(string path, string file) {
 
-#ifdef THREADING
-	// start new thread for crawling
-	boost::thread *crawlThread;
-	bool threadCreated = false;	// may be unnecessary !!!
-	unsigned int crawledLinksNum = crawledLinks.size(); // because of threads
-	crawlThread = new boost::thread(boost::bind(&WebSpider::crawl, this, path, file));
-	if (crawledLinksNum % 10 == 0) {
-		
-		threadCreated = true;
-		threadNum++;
-		cout << "Threads running: " << threadNum << endl;
-	}
-	mutex.unlock();
+	crawlTimer.restart();
+
+#ifdef MULTITHREADING
+	cout << "Threads running: " << threadGroup.size() << endl;
 #endif
 
 	try {		
 
 		bool hasBeenCrawledYet = false;
-		//mutex.lock();
+		mutex.lock();
 		for (unsigned int i = 0; i < crawledLinks.size(); i++) {
 			if (path + file == crawledLinks.at(i))
 				hasBeenCrawledYet = true;
 		}
-		//mutex.unlock();
+		mutex.unlock();
 
 		if (false == hasBeenCrawledYet) {
 
@@ -122,28 +111,36 @@ void WebSpider::crawl(string path, string file) {
 
 				vector<string> links;
 
-				// href with " and ' becomes parsed
-				boost::regex e("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"|\'([^\"]*)\'",
+				// TODO: href= can also start with ' instead of " ; nice-to-have: regex filter last path
+				boost::regex e("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",
 					boost::regbase::normal | boost::regbase::icase);
 				boost::regex_split(std::back_inserter(links), ss.str(), e);
 
-				//mutex.lock();
+				mutex.lock();
 				for (unsigned int i = 0; i < links.size(); i++) {
+					string link = links.at(i);
 					string newPath, newFile;
 					// check relative link
-					if (links.at(i).find("://") == string::npos) {
-						// ignore links with "#" or "javascript:"
-						if (links.at(i).find("#") == string::npos && links.at(i).find("javascript:") == string::npos && links.at(i).find("..") == string::npos) {
+					if (link.find("://") == string::npos) {
+						// ignore links with "#" or "javascript:" or ".."
+						if (link.find("#") == string::npos && link.find("javascript:") == string::npos && link.find("..") == string::npos) {
 							// check new dirs
-							if (links.at(i).find("/") != string::npos) {
-								newPath = path + links.at(i).substr(0, links.at(i).find_last_of("/") + 1);
-								newFile = links.at(i).substr(links.at(i).find_last_of("/") + 1);
+							if (link.find("/") != string::npos) {
+								newPath = path + link.substr(0, link.find_last_of("/") + 1);
+								newFile = link.substr(link.find_last_of("/") + 1);
 							}
 							// relative file in same dir
 							else {
 								newPath = path;
-								newFile = links.at(i);
+								newFile = link;
 							}
+
+							#ifdef MULTITHREADING
+							mutex.lock();
+							boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
+							threadGroup.add_thread(&thread);
+							mutex.unlock();
+							#endif
 							// crawl new file recursive
 							crawl(newPath, newFile);
 						}
@@ -151,37 +148,43 @@ void WebSpider::crawl(string path, string file) {
 					// absolute link
 					else {
 						// if link is in same domain
-						if (links.at(i).find(domain) != string::npos) {
-							newPath = links.at(i).substr(links.at(i).find(host));
+						if (link.find(domain) != string::npos) {
+							newPath = link.substr(link.find(host));
 							// if no "/" is found it's the root dir
 							if (newPath.find("/") == string::npos) {
 								newPath = "/";
 								newFile = "";
 							}
 							else {
-								newFile = links.at(i).substr(links.at(i).find_last_of("/") + 1);
+								newFile = link.substr(link.find_last_of("/") + 1);
 								newPath = newPath.substr(newPath.find(host) + host.size());
 								newPath = newPath.erase(newPath.find(newFile), newFile.size());
 							}
+
+							#ifdef MULTITHREADING
+							mutex.lock();
+							boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
+							threadGroup.add_thread(&thread);
+							mutex.unlock();
+							#endif
 							// crawl file recursive
 							crawl(newPath, newFile);
+
 						}
 					}
 				}
-				//mutex.unlock();
+				mutex.unlock();
 			}
 			else {
 				brokenLinks.push_back(path + file);
 				cout << "Added broken link: " << path << file << endl;
 			}
-#ifdef THREADING
-			if (true == threadCreated) {
-				crawlThread->join();
-				mutex.lock();
-				threadNum--;
-				mutex.unlock();
-				delete crawlThread;
-			}
+#ifdef MUTLITHREADING
+			mutex.lock();
+#endif
+			elapsedTime += crawlTimer.elapsed(); 
+#ifdef MULTITHREADING
+			mutex.unlock();
 #endif
 		}
 	}
