@@ -24,3 +24,4 @@ Go to "C:\Program Files\" and create a new directory called
 should have the following directory structure:
 "C:\Program Files\boost\boost_1_42".
 
+Now you can use our program with Visual Studio 2008 - enjoy =)
