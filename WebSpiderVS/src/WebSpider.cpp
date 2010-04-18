@@ -4,17 +4,37 @@ WebSpider::WebSpider(string protocol, string host)
 {
 	this->protocol = protocol;
 	this->host = host;
-	domain = host.substr(host.find_first_not_of("www.")); // not correct yet !!!
+
+	// set domain
+	if (host.find("www.") != string::npos) {
+		domain = host.substr(4);
+	}
+	else domain = host;
+
 	mutex.initialize();
 	crawledLinks.mutex = &mutex;
 	brokenLinks.mutex = &mutex;
+
+#ifdef THREADING
+	threadNum = 0;
+#endif
 }
 
-void WebSpider::crawl(string path, string link) {
+void WebSpider::crawl(string path, string file) {
 
 #ifdef THREADING
 	// start new thread for crawling
-	boost::thread crawlThread(boost::bind(&WebSpider::crawl, this, path, link));
+	boost::thread *crawlThread;
+	bool threadCreated = false;	// may be unnecessary !!!
+	unsigned int crawledLinksNum = crawledLinks.size(); // because of threads
+	crawlThread = new boost::thread(boost::bind(&WebSpider::crawl, this, path, file));
+	if (crawledLinksNum % 10 == 0) {
+		
+		threadCreated = true;
+		threadNum++;
+		cout << "Threads running: " << threadNum << endl;
+	}
+	mutex.unlock();
 #endif
 
 	try {		
@@ -22,16 +42,16 @@ void WebSpider::crawl(string path, string link) {
 		bool hasBeenCrawledYet = false;
 		//mutex.lock();
 		for (unsigned int i = 0; i < crawledLinks.size(); i++) {
-			if (path + link == crawledLinks.at(i))
+			if (path + file == crawledLinks.at(i))
 				hasBeenCrawledYet = true;
 		}
 		//mutex.unlock();
 
 		if (false == hasBeenCrawledYet) {
 
-			crawledLinks.push_back(path + link);
+			crawledLinks.push_back(path + file);
 
-			cout << "crawling link: " << path << link << endl;
+			cout << "crawling link: " << path << file << endl;
 #ifdef DEBUG
 			cout << "\tdomain: " << domain << endl;
 #endif
@@ -60,7 +80,7 @@ void WebSpider::crawl(string path, string link) {
 			boost::asio::streambuf request;
 			ostream request_stream(&request);
 
-			request_stream << "GET " << path << link << " HTTP/1.0\r\n";
+			request_stream << "GET " << path << file << " HTTP/1.0\r\n";
 			request_stream << "Host: " << host << "\r\n";
 			request_stream << "Accept: */*\r\n";
 			request_stream << "Connection: close\r\n\r\n";
@@ -111,47 +131,61 @@ void WebSpider::crawl(string path, string link) {
 					boost::regbase::normal | boost::regbase::icase);
 				boost::regex_split(std::back_inserter(links), ss.str(), n);
 
-
 				//mutex.lock();
 				for (unsigned int i = 0; i < links.size(); i++) {
-					string newPath, newLink;
+					string newPath, newFile;
 					// check relative link
 					if (links.at(i).find("://") == string::npos) {
 						// ignore links with "#" or "javascript:"
-						if (links.at(i).find("#") == string::npos && links.at(i).find("javascript:") == string::npos) {
+						if (links.at(i).find("#") == string::npos && links.at(i).find("javascript:") == string::npos && links.at(i).find("..") == string::npos) {
 							// check new dirs
 							if (links.at(i).find("/") != string::npos) {
 								newPath = path + links.at(i).substr(0, links.at(i).find_last_of("/") + 1);
-								newLink = links.at(i).substr(links.at(i).find_last_of("/") + 1);
+								newFile = links.at(i).substr(links.at(i).find_last_of("/") + 1);
 							}
-							// relative link in same dir
+							// relative file in same dir
 							else {
 								newPath = path;
-								newLink = links.at(i);
+								newFile = links.at(i);
 							}
-							// crawl new link recursive
-							crawl(newPath, newLink);
+							// crawl new file recursive
+							crawl(newPath, newFile);
 						}
 					}
 					// absolute link
 					else {
-						if (links.at(i).find(domain)) {
-							newPath = links.at(i).substr(links.at(i).find_first_of("/") + 1, links.at(i).find_last_of("/") + 1);
-							newLink = links.at(i).substr(links.at(i).find(newPath), newPath.size() + 1);
+						// if link is in same domain
+						if (links.at(i).find(domain) != string::npos) {
+							newPath = links.at(i).substr(links.at(i).find(host));
+							// if no "/" is found it's the root dir
+							if (newPath.find("/") == string::npos) {
+								newPath = "/";
+								newFile = "";
+							}
+							else {
+								newFile = links.at(i).substr(links.at(i).find_last_of("/") + 1);
+								newPath = newPath.substr(newPath.find(host) + host.size());
+								newPath = newPath.erase(newPath.find(newFile), newFile.size());
+							}
+							// crawl file recursive
+							crawl(newPath, newFile);
 						}
-						// crawl link recursive
-						crawl(newPath, newLink);
 					}
-
 				}
 				//mutex.unlock();
 			}
 			else {
-				brokenLinks.push_back(path + link);
-				cout << "Added broken link: " << path << link << endl;
+				brokenLinks.push_back(path + file);
+				cout << "Added broken link: " << path << file << endl;
 			}
 #ifdef THREADING
-			crawlThread.join();
+			if (true == threadCreated) {
+				crawlThread->join();
+				mutex.lock();
+				threadNum--;
+				mutex.unlock();
+				delete crawlThread;
+			}
 #endif
 		}
 	}
