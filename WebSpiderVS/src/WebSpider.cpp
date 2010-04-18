@@ -111,7 +111,6 @@ void WebSpider::crawl(string path, string link) {
 					boost::regbase::normal | boost::regbase::icase);
 				boost::regex_split(std::back_inserter(links), ss.str(), n);
 
-
 				//mutex.lock();
 				for (unsigned int i = 0; i < links.size(); i++) {
 					string newPath, newLink;
