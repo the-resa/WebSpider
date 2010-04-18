@@ -8,5 +8,6 @@ int main()
 	cout << "Links crawled: " << spider.crawledLinks.size() << endl;
 	cout << "Broken links found: " << spider.brokenLinks.size() << endl;
 
+	system("PAUSE");
 	return 0;
 }

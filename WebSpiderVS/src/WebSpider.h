@@ -16,15 +16,17 @@ class WebSpider {
 
 public:
 	WebSpider(string protocol, string host);
-	void crawl(string path, string link="");
-	ThreadSafeVector<string> crawledLinks;
-	ThreadSafeVector<string> brokenLinks;
+	void crawl(string path, string file="");
+	ThreadSafeVector<string> crawledLinks, brokenLinks;
 
 private:
 	string protocol;
 	string host;
 	string domain;
 	boost::mutex mutex;
+#ifdef THREADING
+	unsigned int threadNum;
+#endif
 };
 
 #endif
