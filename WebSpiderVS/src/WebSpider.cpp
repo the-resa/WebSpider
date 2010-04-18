@@ -11,7 +11,6 @@ WebSpider::WebSpider(string protocol, string host)
 	}
 	else domain = host;
 
-	mutex.initialize();
 	crawledLinks.mutex = &mutex;
 	brokenLinks.mutex = &mutex;
 
