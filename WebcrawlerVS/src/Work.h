@@ -1,18 +1,18 @@
 #ifndef WORK_H
 #define WORK_H
 
+#include "Runnable.h"
+#include <iostream>
+
 class Work : public Runnable {
-	
-	public:
-		Work(int d = 1) : data(d) {}
 
-		void run() {
-			printf("work %d being processed\n",
-				data);
-		}
+public:
+	Work(int d = 1);
 
-	private:
-		int data;
+	void run();
+
+private:
+	int data;
 };
 
 #endif

@@ -1,9 +1,8 @@
-#include "Webcrawler.h"
+#include "WebCrawler.h"
 
-
-void *thread_func(void *arg) {
+void WebCrawler::thread_func(void *arg) {
 	Threadpool *tp = (Threadpool *) arg;
-	if (!tp) return 0;
+	if (!tp) return;
 
 	while (true) {
 		Runnable *r = tp->getTask();
@@ -11,5 +10,5 @@ void *thread_func(void *arg) {
 		r->run();
 		delete r;
 	}
-	return 0;
+	return;
 }

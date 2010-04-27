@@ -2,7 +2,7 @@
 #define RUNNABLE_H
 
 class Runnable {
-	public:
+public:
 	virtual void run() = 0;
 	virtual ~Runnable() {}
 };

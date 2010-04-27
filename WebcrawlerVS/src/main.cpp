@@ -3,6 +3,6 @@
 int main()
 {
 	
-
+	WebCrawler crawler;
 	return 0;
 }
