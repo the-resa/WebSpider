@@ -98,6 +98,7 @@ void WebSpider::crawl(string path, string file) {
 				boost::asio::read_until(socket, response, "\r\n\r\n");
 
 				ostringstream ss;
+				string data;
 
 				// Read until EOF, writing data to output as we go.
 				while (boost::asio::read(socket, response,
@@ -109,13 +110,22 @@ void WebSpider::crawl(string path, string file) {
 					throw boost::system::system_error(error);		
 
 				vector<string> links;
-
+				data = ss.str();
 				// TODO: href= can also start with ' instead of " ; nice-to-have: regex filter last path
-				boost::regex e("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",
-					boost::regbase::normal | boost::regbase::icase);
-				boost::regex_split(std::back_inserter(links), ss.str(), e);
-
+				boost::regex e("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",boost::regbase::normal | boost::regbase::icase);
+			
+				//boost::regex_split(std::back_inserter(links), ss.str(), e);
+				boost::sregex_token_iterator i(data.begin(), data.end(), e, -1);
+				boost::sregex_token_iterator j;
+				 while(i != j)
+				{
+					std::cout << *i++ << std::endl << "-------";
+					}
 				mutex.lock();
+
+
+     
+
 				for (unsigned int i = 0; i < links.size(); i++) {
 					string link = links.at(i);
 					string newPath, newFile;
