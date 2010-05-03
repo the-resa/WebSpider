@@ -11,10 +11,12 @@ WebSpider::WebSpider(string protocol, string host)
 	}
 	else domain = host;
 
-	crawledLinks.mutex = &mutex;
-	brokenLinks.mutex = &mutex;
-
 	elapsedTime = 0.0;
+
+#ifdef MULTITHREADING
+	createThreads = true;
+#endif
+
 }
 
 void WebSpider::crawl(string path, string file) {
@@ -22,18 +24,31 @@ void WebSpider::crawl(string path, string file) {
 	crawlTimer.restart();
 
 #ifdef MULTITHREADING
-	cout << "Threads running: " << threadGroup.size() << endl;
+	mutex.lock();
+	if (createThreads == true) {
+		for (int i = 0; i < THREAD_NUM; i++) {
+			boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
+			threads.push_back(&thread);
+		}
+		createThreads = false;
+	}
+	mutex.unlock();
 #endif
 
 	try {		
 
 		bool hasBeenCrawledYet = false;
+#ifdef MULTITHREADING
 		mutex.lock();
+#endif
 		for (unsigned int i = 0; i < crawledLinks.size(); i++) {
 			if (path + file == crawledLinks.at(i))
 				hasBeenCrawledYet = true;
 		}
+
+#ifdef MULTITHREADING
 		mutex.unlock();
+#endif
 
 		if (false == hasBeenCrawledYet) {
 
@@ -121,10 +136,9 @@ void WebSpider::crawl(string path, string file) {
 				{
 					std::cout << *i++ << std::endl << "-------";
 					}*/
+#ifdef MULTITHREADING
 				mutex.lock();
-
-
-     
+#endif
 
 				for (unsigned int i = 0; i < links.size(); i++) {
 					string link = links.at(i);
@@ -143,13 +157,6 @@ void WebSpider::crawl(string path, string file) {
 								newPath = path;
 								newFile = link;
 							}
-
-							#ifdef MULTITHREADING
-							mutex.lock();
-							boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
-							threadGroup.add_thread(&thread);
-							mutex.unlock();
-							#endif
 							// crawl new file recursive
 							crawl(newPath, newFile);
 						}
@@ -167,22 +174,17 @@ void WebSpider::crawl(string path, string file) {
 							else {
 								newFile = link.substr(link.find_last_of("/") + 1);
 								newPath = newPath.substr(newPath.find(host) + host.size());
-								newPath = newPath.erase(newPath.find(newFile), newFile.size());
+								newPath = newPath.erase(newPath.find(newFile));
 							}
-
-							#ifdef MULTITHREADING
-							mutex.lock();
-							boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
-							threadGroup.add_thread(&thread);
-							mutex.unlock();
-							#endif
 							// crawl file recursive
 							crawl(newPath, newFile);
 
 						}
 					}
 				}
+#ifdef MULTITHREADING
 				mutex.unlock();
+#endif
 			}
 			else {
 				brokenLinks.push_back(path + file);
@@ -190,8 +192,16 @@ void WebSpider::crawl(string path, string file) {
 			}
 #ifdef MUTLITHREADING
 			mutex.lock();
+			for (int i = 0; i < threads.size(); i++) {
+				threads.at(i)->join();
+			}
 #endif
 			elapsedTime += crawlTimer.elapsed(); 
+			cout << "Links crawled: " << crawledLinks.size() << endl;
+			cout << "Broken links found: " << brokenLinks.size() << endl;
+			cout << "Broken links in percent: " << (float)brokenLinks.size() / (float)crawledLinks.size() * 100 << endl;
+			cout << "Elapsed time since start: " << elapsedTime << std::endl;
+
 #ifdef MULTITHREADING
 			mutex.unlock();
 #endif

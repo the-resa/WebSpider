@@ -11,26 +11,26 @@ public:
 	ThreadSafeVector() {};
 
 	void push_back(const T &type) {
-		mutex->lock();
+		mutex.lock();
 		vector.push_back(type);
-		mutex->unlock();
+		mutex.unlock();
 	}
 
 	T at(unsigned int index) {
-		mutex->lock();
+		mutex.lock();
 		T type = vector.at(index);
-		mutex->unlock();
+		mutex.unlock();
 		return type;
 	}
 
 	unsigned int size() {
-		mutex->lock();
+		mutex.lock();
 		unsigned int n = vector.size();
-		mutex->unlock();
+		mutex.unlock();
 		return n;
 	}
 
-	boost::recursive_mutex* mutex;
+	boost::recursive_mutex mutex;
 
 private:
 	std::vector<T> vector;
