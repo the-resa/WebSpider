@@ -12,7 +12,7 @@ using namespace boost::asio::ip;
 
 #define DEBUG
 #define MULTITHREADING
-#define THREAD_NUM 50
+#define THREAD_NUM 20
 
 class WebSpider {
 

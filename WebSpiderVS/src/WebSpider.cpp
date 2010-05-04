@@ -9,7 +9,8 @@ WebSpider::WebSpider(string protocol, string host)
 	if (host.find("www.") != string::npos) {
 		domain = host.substr(4);
 	}
-	else domain = host;
+	else 
+		domain = host;
 
 	elapsedTime = 0.0;
 
@@ -21,6 +22,7 @@ WebSpider::WebSpider(string protocol, string host)
 
 void WebSpider::crawl(string path, string file) {
 
+	elapsedTime += crawlTimer.elapsed(); // seems to be thread-safe
 	crawlTimer.restart();
 
 #ifdef MULTITHREADING
@@ -35,23 +37,23 @@ void WebSpider::crawl(string path, string file) {
 	mutex.unlock();
 #endif
 
-	try {		
-
-		bool hasBeenCrawledYet = false;
-#ifdef MULTITHREADING
-		mutex.lock();
-#endif
-		for (unsigned int i = 0; i < crawledLinks.size(); i++) {
-			if (path + file == crawledLinks.at(i))
-				hasBeenCrawledYet = true;
-		}
+	bool hasBeenCrawledYet = false;
 
 #ifdef MULTITHREADING
-		mutex.unlock();
+	mutex.lock();
+#endif
+	for (unsigned int i = 0; i < crawledLinks.size(); i++) {
+		if (path + file == crawledLinks.at(i))
+			hasBeenCrawledYet = true;
+	}
+
+#ifdef MULTITHREADING
+	mutex.unlock();
 #endif
 
-		if (false == hasBeenCrawledYet) {
+	if (false == hasBeenCrawledYet) {
 
+		try {		
 			crawledLinks.push_back(path + file);
 
 			cout << "crawling link: " << path << file << endl;
@@ -125,7 +127,7 @@ void WebSpider::crawl(string path, string file) {
 					throw boost::system::system_error(error);		
 
 				vector<string> links;
-				// TODO: href= can also start with ' instead of " ; nice-to-have: regex filter last path
+				
 				boost::regex e("<\\s*A\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"",boost::regbase::normal | boost::regbase::icase);
 				
 				string data = ss.str();
@@ -190,8 +192,7 @@ void WebSpider::crawl(string path, string file) {
 			for (int i = 0; i < threads.size(); i++) {
 				threads.at(i)->join();
 			}
-#endif
-			elapsedTime += crawlTimer.elapsed(); 
+#endif 
 			cout << "Links crawled: " << crawledLinks.size() << endl;
 			cout << "Broken links found: " << brokenLinks.size() << endl;
 			cout << "Broken links in percent: " << (float)brokenLinks.size() / (float)crawledLinks.size() * 100 << endl;
@@ -201,10 +202,9 @@ void WebSpider::crawl(string path, string file) {
 			mutex.unlock();
 #endif
 		}
+		catch (exception& e)
+		{
+			cout << "Exception: " << e.what() << "\n";
+		}
 	}
-	catch (exception& e)
-	{
-		cout << "Exception: " << e.what() << "\n";
-	}
-
 }
