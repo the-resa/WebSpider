@@ -1,4 +1,3 @@
-#VPATH=src/
 CXXFLAGS = -Wall
 CXX = g++ -g
 
