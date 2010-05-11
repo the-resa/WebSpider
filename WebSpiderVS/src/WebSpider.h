@@ -11,7 +11,6 @@ using namespace std;
 using namespace boost::asio::ip;
 
 #define DEBUG
-#define MULTITHREADING
 #define THREAD_NUM 20
 
 class WebSpider {
@@ -28,10 +27,9 @@ private:
 	string domain;
 	boost::recursive_mutex mutex;
 	boost::timer crawlTimer;
-#ifdef MULTITHREADING
 	bool createThreads;
 	ThreadSafeVector<boost::thread*> threads;
-#endif
+	unsigned int threadNum;
 };
 
 #endif

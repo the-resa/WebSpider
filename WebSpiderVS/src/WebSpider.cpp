@@ -14,9 +14,8 @@ WebSpider::WebSpider(string protocol, string host)
 
 	elapsedTime = 0.0;
 
-#ifdef MULTITHREADING
 	createThreads = true;
-#endif
+	threadNum = 0;
 
 }
 
@@ -25,7 +24,8 @@ void WebSpider::crawl(string path, string file) {
 	elapsedTime += crawlTimer.elapsed(); // seems to be thread-safe
 	crawlTimer.restart();
 
-#ifdef MULTITHREADING
+	cout << "Threads running: " << threadNum << endl;
+	/*
 	mutex.lock();
 	if (createThreads == true) {
 		for (int i = 0; i < THREAD_NUM; i++) {
@@ -35,21 +35,19 @@ void WebSpider::crawl(string path, string file) {
 		createThreads = false;
 	}
 	mutex.unlock();
-#endif
+	*/
 
 	bool hasBeenCrawledYet = false;
 
-#ifdef MULTITHREADING
 	mutex.lock();
-#endif
 	for (unsigned int i = 0; i < crawledLinks.size(); i++) {
-		if (path + file == crawledLinks.at(i))
+		if (path + file == crawledLinks.at(i)) {
 			hasBeenCrawledYet = true;
+			break;
+		}
 	}
 
-#ifdef MULTITHREADING
 	mutex.unlock();
-#endif
 
 	if (false == hasBeenCrawledYet) {
 
@@ -133,9 +131,7 @@ void WebSpider::crawl(string path, string file) {
 				string data = ss.str();
 				boost::regex_split(std::back_inserter(links), data, e);
 				
-#ifdef MULTITHREADING
 				mutex.lock();
-#endif
 
 				for (unsigned int i = 0; i < links.size(); i++) {
 					string link = links.at(i);
@@ -155,6 +151,8 @@ void WebSpider::crawl(string path, string file) {
 								newFile = link;
 							}
 							// crawl new file recursive
+							boost::thread thread(boost::bind(&WebSpider::crawl, this, newPath, newFile));
+							threadNum++;
 							crawl(newPath, newFile);
 						}
 					}
@@ -174,33 +172,25 @@ void WebSpider::crawl(string path, string file) {
 								newPath = newPath.erase(newPath.find(newFile));
 							}
 							// crawl file recursive
+							boost::thread thread(boost::bind(&WebSpider::crawl, this, newPath, newFile));
+							threadNum++;
 							crawl(newPath, newFile);
-
 						}
 					}
 				}
-#ifdef MULTITHREADING
 				mutex.unlock();
-#endif
 			}
 			else {
 				brokenLinks.push_back(path + file);
 				cout << "Added broken link: " << path << file << endl;
 			}
-#ifdef MUTLITHREADING
 			mutex.lock();
-			for (int i = 0; i < threads.size(); i++) {
-				threads.at(i)->join();
-			}
-#endif 
 			cout << "Links crawled: " << crawledLinks.size() << endl;
 			cout << "Broken links found: " << brokenLinks.size() << endl;
 			cout << "Broken links in percent: " << (float)brokenLinks.size() / (float)crawledLinks.size() * 100 << endl;
 			cout << "Elapsed time since start: " << elapsedTime << std::endl;
 
-#ifdef MULTITHREADING
 			mutex.unlock();
-#endif
 		}
 		catch (exception& e)
 		{
