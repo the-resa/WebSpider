@@ -11,7 +11,7 @@ using namespace std;
 using namespace boost::asio::ip;
 
 #define DEBUG
-#define THREAD_NUM 20
+#define MAX_THREAD_NUM 40
 
 class WebSpider {
 
@@ -27,9 +27,9 @@ private:
 	string domain;
 	boost::recursive_mutex mutex;
 	boost::timer crawlTimer;
-	bool createThreads;
 	ThreadSafeVector<boost::thread*> threads;
 	unsigned int threadNum;
+	void _crawl(string path, string file);	// wraps the crawl-function
 };
 
 #endif
