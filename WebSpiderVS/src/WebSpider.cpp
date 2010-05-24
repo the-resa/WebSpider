@@ -12,20 +12,15 @@ WebSpider::WebSpider(string protocol, string host)
 	else 
 		domain = host;
 
-	elapsedTime = 0.0;
-
 	threadNum = 0;
-
 }
 
 void WebSpider::crawl(string path, string file) {
 
-	elapsedTime += crawlTimer.elapsed(); // seems to be thread-safe
-	crawlTimer.restart();
-
-	cout << "Threads running: " << threadNum << endl;
 
 	bool hasBeenCrawledYet = false;
+
+	cout << "Threads running: " << threadNum << endl;
 
 	mutex.lock();
 	for (unsigned int i = 0; i < crawledLinks.size(); i++) {
@@ -119,11 +114,11 @@ void WebSpider::crawl(string path, string file) {
 				string data = ss.str();
 				boost::regex_split(std::back_inserter(links), data, e);
 				
-				mutex.lock();
-
+			
 				for (unsigned int i = 0; i < links.size(); i++) {
 					string link = links.at(i);
 					string newPath, newFile;
+					bool crawlLink = true;
 					// check relative link
 					if (link.find("://") == string::npos) {
 						// ignore links with "#" or "javascript:" or ".."
@@ -138,7 +133,6 @@ void WebSpider::crawl(string path, string file) {
 								newPath = path;
 								newFile = link;
 							}
-							// crawl new file recursive
 							_crawl(newPath, newFile);
 						}
 					}
@@ -157,24 +151,16 @@ void WebSpider::crawl(string path, string file) {
 								newPath = newPath.substr(newPath.find(host) + host.size());
 								newPath = newPath.erase(newPath.find(newFile));
 							}
-							// crawl file recursive
 							_crawl(newPath, newFile);
 						}
 					}
 				}
-				mutex.unlock();
+				
 			}
 			else {
 				brokenLinks.push_back(path + file);
 				cout << "Added broken link: " << path << file << endl;
 			}
-			mutex.lock();
-			cout << "Links crawled: " << crawledLinks.size() << endl;
-			cout << "Broken links found: " << brokenLinks.size() << endl;
-			cout << "Broken links in percent: " << (float)brokenLinks.size() / (float)crawledLinks.size() * 100 << endl;
-			cout << "Elapsed time since start: " << elapsedTime << std::endl;
-
-			mutex.unlock();
 		}
 		catch (exception& e)
 		{
@@ -184,14 +170,27 @@ void WebSpider::crawl(string path, string file) {
 }
 
 void WebSpider::_crawl(string path, string file) {
-	mutex.lock();
+	int missingThreadNum = 0;
 	if (threadNum <  MAX_THREAD_NUM) {
-		boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
-		threadNum++;
+		missingThreadNum = MAX_THREAD_NUM - threadNum;
+		for (int i = 0 ; i < missingThreadNum ; i ++) {
+			boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
+		}
+		mutex.lock();
+		threadNum += missingThreadNum;
+		mutex.unlock();
+	}
+
+	// crawl new file recursive
+	crawl(path, file);
+
+	mutex.lock();
+	for (int i = 0 ; i < missingThreadNum ; i++) {
+		threadNum--;
 	}
 	mutex.unlock();
-	crawl(path, file);
-	mutex.lock();
-	threadNum--;
-	mutex.unlock();
+}
+
+unsigned int WebSpider::getThreadNum() const {
+	return threadNum;
 }

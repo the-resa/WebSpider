@@ -20,14 +20,13 @@ public:
 	void crawl(string path, string file="");
 	ThreadSafeVector<string> crawledLinks, brokenLinks;
 	double elapsedTime;
+	unsigned int getThreadNum() const;
 
 private:
 	string protocol;
 	string host;
 	string domain;
 	boost::recursive_mutex mutex;
-	boost::timer crawlTimer;
-	ThreadSafeVector<boost::thread*> threads;
 	unsigned int threadNum;
 	void _crawl(string path, string file);	// wraps the crawl-function
 };
