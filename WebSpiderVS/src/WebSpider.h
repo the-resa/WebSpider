@@ -11,7 +11,7 @@ using namespace std;
 using namespace boost::asio::ip;
 
 #define DEBUG
-#define MAX_THREAD_NUM 40
+#define MAX_THREAD_NUM 10
 
 class WebSpider {
 

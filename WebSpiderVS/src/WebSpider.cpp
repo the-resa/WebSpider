@@ -170,16 +170,16 @@ void WebSpider::crawl(string path, string file) {
 }
 
 void WebSpider::_crawl(string path, string file) {
+	mutex.lock();
 	int missingThreadNum = 0;
 	if (threadNum <  MAX_THREAD_NUM) {
 		missingThreadNum = MAX_THREAD_NUM - threadNum;
 		for (int i = 0 ; i < missingThreadNum ; i ++) {
 			boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
 		}
-		mutex.lock();
 		threadNum += missingThreadNum;
-		mutex.unlock();
 	}
+	mutex.unlock();
 
 	// crawl new file recursive
 	crawl(path, file);
