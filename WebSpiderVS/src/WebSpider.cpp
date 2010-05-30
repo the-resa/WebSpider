@@ -29,7 +29,6 @@ void WebSpider::crawl(string path, string file) {
 			break;
 		}
 	}
-
 	mutex.unlock();
 
 	if (false == hasBeenCrawledYet) {
@@ -118,7 +117,7 @@ void WebSpider::crawl(string path, string file) {
 				for (unsigned int i = 0; i < links.size(); i++) {
 					string link = links.at(i);
 					string newPath, newFile;
-					bool crawlLink = true;
+					bool crawlLink = false;
 					// check relative link
 					if (link.find("://") == string::npos) {
 						// ignore links with "#" or "javascript:" or ".."
@@ -133,7 +132,7 @@ void WebSpider::crawl(string path, string file) {
 								newPath = path;
 								newFile = link;
 							}
-							_crawl(newPath, newFile);
+							crawlLink = true;
 						}
 					}
 					// absolute link
@@ -151,11 +150,17 @@ void WebSpider::crawl(string path, string file) {
 								newPath = newPath.substr(newPath.find(host) + host.size());
 								newPath = newPath.erase(newPath.find(newFile));
 							}
-							_crawl(newPath, newFile);
+							crawlLink = true;
 						}
 					}
+					if (true == crawlLink) {
+						if (threadNum < MAX_THREAD_NUM) {
+							threadNum++;
+							boost::thread thread(boost::bind(&WebSpider::_crawl, this, newPath, newFile));
+						}			
+						else crawl(newPath,newFile);
+					}
 				}
-				
 			}
 			else {
 				brokenLinks.push_back(path + file);
@@ -170,25 +175,8 @@ void WebSpider::crawl(string path, string file) {
 }
 
 void WebSpider::_crawl(string path, string file) {
-	mutex.lock();
-	int missingThreadNum = 0;
-	if (threadNum <  MAX_THREAD_NUM) {
-		missingThreadNum = MAX_THREAD_NUM - threadNum;
-		for (int i = 0 ; i < missingThreadNum ; i ++) {
-			boost::thread thread(boost::bind(&WebSpider::crawl, this, path, file));
-		}
-		threadNum += missingThreadNum;
-	}
-	mutex.unlock();
-
-	// crawl new file recursive
 	crawl(path, file);
-
-	mutex.lock();
-	for (int i = 0 ; i < missingThreadNum ; i++) {
-		threadNum--;
-	}
-	mutex.unlock();
+	threadNum--;
 }
 
 unsigned int WebSpider::getThreadNum() const {
