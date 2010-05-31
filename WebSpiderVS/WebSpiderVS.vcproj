@@ -181,6 +181,14 @@
 				RelativePath=".\src\WebSpider.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\wingetopt.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\wingetopt.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="include"

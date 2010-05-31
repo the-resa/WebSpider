@@ -2,13 +2,57 @@
 #include <boost/timer.hpp>
 #include <ctime>
 
-int main()
+#ifdef WIN32
+#include "wingetopt.h"
+#endif
+
+int main(int argc, char* argv[]) 
 {
+
+	string protocol = "http";
+	string server = "www.wrel.de";
+	string link = "/frick/Demosite/";
+	string file = "";
+
+	int opt=0;
+
+	while((opt = getopt(argc, argv, "p:s:l:f"))!= -1)  
+	{  
+		switch(opt)  {  
+			case 'p':   
+				protocol = optarg;
+			break;
+			
+			case 's':  
+				server = optarg;  
+				break;  
+			
+			case 'l':   
+				link = optarg;  
+				break;  
+
+			case 'f':   
+				file = optarg;
+				break;  
+
+			default:    
+				cout << "Unknown option. Standard-parameter will be used.\n"; 
+				break; 
+		}  
+	} 
+
+	cout << "The crawling will start from the following site:\n" <<
+		"\t" << protocol + "://" + server + link + file << endl;
+
 	time_t start, end;
-	WebSpider spider("http", "www.wrel.de");
+	WebSpider spider(protocol, server);
+
+	cout << "Enter any key to start crawling\n";
+	int key;
+	cin >> key;
 
 	time(&start);
-	spider.crawl("/frick/Demosite/");
+	spider.crawl(link, file);
 
 	while (true) {
 		if (0 == spider.getThreadNum()) {
