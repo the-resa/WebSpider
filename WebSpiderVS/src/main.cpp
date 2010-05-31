@@ -12,7 +12,11 @@ int main()
 
 	while (true) {
 		if (0 == spider.getThreadNum()) {
+#ifdef WIN32
 			Sleep(1000); // sleep one second to wait if there are still threads running
+#else
+			sleep(1000);
+#endif
 			if (0 == spider.getThreadNum()) {
 				break;
 			}
