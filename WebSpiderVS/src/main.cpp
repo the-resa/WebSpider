@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 				server = optarg;  
 				break;  
 			
-			case 'l':   
+			case 'l':  
 				link = optarg;  
 				break;  
 
