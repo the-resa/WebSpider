@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 #ifdef WIN32
 			Sleep(1000); // sleep one second to wait if there are still threads running
 #else
-			sleep(1000);
+			sleep(1);
 #endif
 			if (0 == spider.getThreadNum()) {
 				break;
@@ -73,7 +73,8 @@ int main(int argc, char* argv[])
 	std::cout << "Broken links found: " << spider.brokenLinks.size() << std::endl;
 	std::cout << "Broken links in percent: " << (float)spider.brokenLinks.size() / (float)spider.crawledLinks.size() * 100 << std::endl;
 	std::cout << "Elapsed time: " << difftime(end, start) << std::endl;
-
+#ifdef WIN32
 	system("PAUSE");
+#endif
 	return 0;
 }
