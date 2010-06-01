@@ -1,23 +1,16 @@
-*****************************************************************
-********************** WEB SPIDER - README **********************
-*****************************************************************
+== WEB SPIDER - README
+Implements multithreading, experiments with different kinds of libraries and is investigating broken links. 
 
-
-Authors
-*****************************************************************
+== Authors
 Angerer Theresa
 Czernik Thomas
 Frick Matthias
 Havranek Ivo
 
-
-Date
-*****************************************************************
+== Date
 Finished on the 18th of April, 2010.
 
-
-Before compiling project
-*****************************************************************
+== Before compiling project
 Use the boost_1_42 library by Beman Dawes (2008).
 Go to "C:\Program Files\" and create a new directory called 
 "boost". Copy and paste boost into that directory. Afterwards you 

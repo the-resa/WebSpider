@@ -1,5 +1,0 @@
-- 445 relative links
-- 4 absolute links (seiten)
-- 21 absoluter link (bild)
-- 445 broken links (seiten)
-- 21 broken link (bild)
