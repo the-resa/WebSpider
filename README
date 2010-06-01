@@ -1,16 +1,16 @@
-== WEB SPIDER
+<h1>WEB SPIDER</h1>
 Implements multithreading, experiments with different kinds of libraries and is investigating broken links. 
 
-== Authors
+<h1>Authors</h1>
 Angerer Theresa
 Czernik Thomas
 Frick Matthias
 Havranek Ivo
 
-== Date
+<h2>Date</h2>
 Finished on the 18th of April, 2010.
 
-== Before compiling project
+<h1>Before compiling project</h1>
 Use the boost_1_42 library by Beman Dawes (2008).
 Go to "C:\Program Files\" and create a new directory called 
 "boost". Copy and paste boost into that directory. Afterwards you 
@@ -19,6 +19,6 @@ should have the following directory structure:
 
 Now you can use our program with Visual Studio 2008 - enjoy =)
 
-== Demosite
+<h1>Demosite</h1>
 
 In Demosite.zip you can find a PHP Script to test the Crawler
